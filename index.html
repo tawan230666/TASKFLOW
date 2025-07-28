@@ -697,6 +697,26 @@
         document.getElementById('taskTitle').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') addTask();
         });
+
+function moveTask(id, newStatus) {
+    const task = tasks.find(t => t.id === id);
+    if (task) {
+        task.status = newStatus;
+        saveTasks(); // บันทึกข้อมูลอัตโนมัติ
+        renderTasks();
+        updateStats();
+    }
+}
+
+function deleteTask(id) {
+    if (confirm('ต้องการลบงานนี้หรือไม่?')) {
+        tasks = tasks.filter(t => t.id !== id);
+        saveTasks(); // บันทึกข้อมูลอัตโนมัติ
+        renderTasks();
+        updateStats();
+    }
+}
+
     </script>
 </body>
 </html>
