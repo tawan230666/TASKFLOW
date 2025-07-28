@@ -1,29 +1,365 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TASKFLOW</title>
-    <link rel="icon" href="/imags/flame.png" type="image/x-icon">
-    <link rel="stylesheet" href="css/style.css">
+    <title>TaskFlow - จัดการงานอย่างชาญฉลาด</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+            padding-top: 80px;
+        }
+
+        .navbar {
+            background-color:rgba(0,0,0,0.3);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            width: 100%;
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo a {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: white;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+            display: inline-block;
+            padding: 4px 8px;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .nav-link::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            border-radius: 50px;
+            height: 2px;
+            background: linear-gradient(135deg , red 0% , white 100%);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after,
+        .nav-link:focus::after {
+            width: 100%;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.2rem;
+        }
+
+        .task-input {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .input-field {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .priority-select {
+            padding: 15px 20px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 16px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .priority-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .add-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .add-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .tasks-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .task-column {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .column-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .column-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .todo .column-title { color: #3498db; }
+        .progress .column-title { color: #f39c12; }
+        .done .column-title { color: #27ae60; }
+
+        .task-count {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .task-item {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-left: 4px solid #ddd;
+            transition: all 0.3s ease;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .task-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        }
+
+        .task-item.high { border-left-color: #e74c3c; }
+        .task-item.medium { border-left-color: #f39c12; }
+        .task-item.low { border-left-color: #27ae60; }
+
+        .task-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .task-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            flex: 1;
+        }
+
+        .task-priority {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .priority-high { background: #ffebee; color: #c62828; }
+        .priority-medium { background: #fff3e0; color: #ef6c00; }
+        .priority-low { background: #e8f5e8; color: #2e7d32; }
+
+        .task-description {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .task-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .move-btn {
+            background: #3498db;
+            color: white;
+        }
+
+        .move-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #999;
+            font-style: italic;
+            padding: 40px 20px;
+        }
+
+        .stats {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+        }
+
+        .stat-item {
+            flex: 1;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 10px; }
+            .header h1 { font-size: 2rem; }
+            .input-group { flex-direction: column; }
+            .tasks-container { grid-template-columns: 1fr; }
+            .stats { flex-direction: column; gap: 15px; }
+        }
+    </style>
 </head>
-
 <body>
-
-    <!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TASKFLOW</title>
-    <link rel="icon" href="/imags/flame.png" type="image/x-icon">
-    <link rel="stylesheet" href="css/style.css">
-</head>
-
-<body>
-
     <!-- navbar -->
     <nav class="navbar">
         <div class="nav-container">
@@ -67,6 +403,11 @@
                 </select>
                 <button class="add-btn" onclick="addTask()">+ เพิ่มงาน</button>
             </div>
+            <div class="data-controls" style="margin-top: 15px; text-align: center; gap: 10px; display: flex; justify-content: center; flex-wrap: wrap;">
+                <button onclick="exportData()" style="padding: 8px 16px; background: #2ecc71; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px;">📥 Export ข้อมูล</button>
+                <button onclick="importData()" style="padding: 8px 16px; background: #3498db; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px;">📤 Import ข้อมูล</button>
+                <button onclick="clearAllData()" style="padding: 8px 16px; background: #e74c3c; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px;">🗑️ ล้างข้อมูล</button>
+            </div>
         </div>
 
         <div class="tasks-container">
@@ -96,16 +437,266 @@
         </div>
     </div>
 
+    <script>
+        let tasks = [];
+        let taskId = 1;
 
+        // โหลดข้อมูลจาก localStorage
+        function loadTasks() {
+            const savedTasks = localStorage.getItem('taskflow_tasks');
+            const savedTaskId = localStorage.getItem('taskflow_taskid');
+            
+            if (savedTasks) {
+                tasks = JSON.parse(savedTasks);
+                // แปลง createdAt กลับเป็น Date object
+                tasks.forEach(task => {
+                    task.createdAt = new Date(task.createdAt);
+                });
+            }
+            
+            if (savedTaskId) {
+                taskId = parseInt(savedTaskId);
+            }
+        }
 
-    <script src="js/script.js"></script>
+        // บันทึกข้อมูลลง localStorage
+        function saveTasks() {
+            localStorage.setItem('taskflow_tasks', JSON.stringify(tasks));
+            localStorage.setItem('taskflow_taskid', taskId.toString());
+        }
+
+        function addTask() {
+            const title = document.getElementById('taskTitle').value.trim();
+            const description = document.getElementById('taskDesc').value.trim();
+            const priority = document.getElementById('taskPriority').value;
+
+            if (!title) {
+                alert('กรุณาใส่ชื่องาน');
+                return;
+            }
+
+            const task = {
+                id: taskId++,
+                title,
+                description,
+                priority,
+                status: 'todo',
+                createdAt: new Date()
+            };
+
+            tasks.push(task);
+            saveTasks(); // บันทึกข้อมูล
+            clearInputs();
+            renderTasks();
+            updateStats();
+        }
+
+        function clearInputs() {
+            document.getElementById('taskTitle').value = '';
+            document.getElementById('taskDesc').value = '';
+            document.getElementById('taskPriority').value = 'low';
+        }
+
+        function moveTask(id, newStatus) {
+            const task = tasks.find(t => t.id === id);
+            if (task) {
+                task.status = newStatus;
+                renderTasks();
+                updateStats();
+            }
+        }
+
+        function deleteTask(id) {
+            if (confirm('ต้องการลบงานนี้หรือไม่?')) {
+                tasks = tasks.filter(t => t.id !== id);
+                renderTasks();
+                updateStats();
+            }
+        }
+
+        function renderTasks() {
+            const todoContainer = document.getElementById('todoTasks');
+            const progressContainer = document.getElementById('progressTasks');
+            const doneContainer = document.getElementById('doneTasks');
+
+            todoContainer.innerHTML = '';
+            progressContainer.innerHTML = '';
+            doneContainer.innerHTML = '';
+
+            const todoTasks = tasks.filter(t => t.status === 'todo');
+            const progressTasks = tasks.filter(t => t.status === 'progress');
+            const doneTasks = tasks.filter(t => t.status === 'done');
+
+            if (todoTasks.length === 0) {
+                todoContainer.innerHTML = '<div class="empty-state">ไม่มีงานที่ต้องทำ</div>';
+            }
+            if (progressTasks.length === 0) {
+                progressContainer.innerHTML = '<div class="empty-state">ไม่มีงานที่กำลังทำ</div>';
+            }
+            if (doneTasks.length === 0) {
+                doneContainer.innerHTML = '<div class="empty-state">ยังไม่มีงานที่เสร็จ</div>';
+            }
+
+            todoTasks.forEach(task => todoContainer.appendChild(createTaskElement(task)));
+            progressTasks.forEach(task => progressContainer.appendChild(createTaskElement(task)));
+            doneTasks.forEach(task => doneContainer.appendChild(createTaskElement(task)));
+        }
+
+        function createTaskElement(task) {
+            const taskEl = document.createElement('div');
+            taskEl.className = `task-item ${task.priority}`;
+            
+            const priorityText = {
+                'high': 'สูง',
+                'medium': 'ปานกลาง',
+                'low': 'ต่ำ'
+            };
+
+            const priorityClass = `priority-${task.priority}`;
+            
+            let actionButtons = '';
+            
+            if (task.status === 'todo') {
+                actionButtons = `<button class="task-btn move-btn" onclick="moveTask(${task.id}, 'progress')">เริ่มทำ</button>`;
+            } else if (task.status === 'progress') {
+                actionButtons = `
+                    <button class="task-btn move-btn" onclick="moveTask(${task.id}, 'todo')">ย้ายกลับ</button>
+                    <button class="task-btn move-btn" onclick="moveTask(${task.id}, 'done')">เสร็จแล้ว</button>
+                `;
+            } else {
+                actionButtons = `<button class="task-btn move-btn" onclick="moveTask(${task.id}, 'progress')">ทำต่อ</button>`;
+            }
+
+            taskEl.innerHTML = `
+                <div class="task-header">
+                    <div class="task-title">${task.title}</div>
+                    <div class="task-priority ${priorityClass}">${priorityText[task.priority]}</div>
+                </div>
+                ${task.description ? `<div class="task-description">${task.description}</div>` : ''}
+                <div class="task-actions">
+                    ${actionButtons}
+                    <button class="task-btn delete-btn" onclick="deleteTask(${task.id})">ลบ</button>
+                </div>
+            `;
+
+            return taskEl;
+        }
+
+        // เพิ่มฟังก์ชันล้างข้อมูลทั้งหมด
+        function clearAllData() {
+            if (confirm('ต้องการลบข้อมูลทั้งหมดหรือไม่?')) {
+                localStorage.removeItem('taskflow_tasks');
+                localStorage.removeItem('taskflow_taskid');
+                tasks = [];
+                taskId = 1;
+                renderTasks();
+                updateStats();
+                alert('ล้างข้อมูลเรียบร้อยแล้ว');
+            }
+        }
+
+        // เพิ่มฟังก์ชัน Export ข้อมูล
+        function exportData() {
+            const dataStr = JSON.stringify(tasks, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `taskflow_backup_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // เพิ่มฟังก์ชัน Import ข้อมูล
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const importedTasks = JSON.parse(e.target.result);
+                            if (confirm('ต้องการแทนที่ข้อมูลปัจจุบันหรือไม่?')) {
+                                tasks = importedTasks;
+                                tasks.forEach(task => {
+                                    task.createdAt = new Date(task.createdAt);
+                                });
+                                saveTasks();
+                                renderTasks();
+                                updateStats();
+                                alert('นำเข้าข้อมูลเรียบร้อยแล้ว');
+                            }
+                        } catch (err) {
+                            alert('ไฟล์ไม่ถูกต้อง');
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            input.click();
+        }
+
+        function updateStats() {
+            const todoCount = tasks.filter(t => t.status === 'todo').length;
+            const progressCount = tasks.filter(t => t.status === 'progress').length;
+            const doneCount = tasks.filter(t => t.status === 'done').length;
+
+            document.getElementById('todoCount').textContent = todoCount;
+            document.getElementById('progressCount').textContent = progressCount;
+            document.getElementById('doneCount').textContent = doneCount;
+
+            document.getElementById('todoCountLabel').textContent = `${todoCount} งาน`;
+            document.getElementById('progressCountLabel').textContent = `${progressCount} งาน`;
+            document.getElementById('doneCountLabel').textContent = `${doneCount} งาน`;
+        }
+
+        // เพิ่มปุ่มจัดการข้อมูล
+        document.addEventListener('DOMContentLoaded', function() {
+            // โหลดข้อมูลก่อน
+            loadTasks();
+            
+            // ถ้าไม่มีข้อมูล ให้เพิ่มงานตัวอย่าง
+            if (tasks.length === 0) {
+                tasks = [
+                    {
+                        id: taskId++,
+                        title: 'ออกแบบ UI/UX',
+                        description: 'ออกแบบหน้าตาเว็บไซต์ให้สวยงาม',
+                        priority: 'high',
+                        status: 'progress',
+                        createdAt: new Date()
+                    },
+                    {
+                        id: taskId++,
+                        title: 'เขียน Code Backend',
+                        description: 'พัฒนา API สำหรับระบบ',
+                        priority: 'medium',
+                        status: 'todo',
+                        createdAt: new Date()
+                    },
+                    {
+                        id: taskId++,
+                        title: 'ทดสอบระบบ',
+                        description: 'ทดสอบการทำงานของระบบ',
+                        priority: 'low',
+                        status: 'done',
+                        createdAt: new Date()
+                    }
+                ];
+                saveTasks();
+            }
+            
+            renderTasks();
+            updateStats();
+        });
+
+        // กด Enter เพื่อเพิ่มงาน
+        document.getElementById('taskTitle').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') addTask();
+        });
+    </script>
 </body>
-
-</html>
-
-
-
-    <script src="js/script.js"></script>
-</body>
-
 </html>
