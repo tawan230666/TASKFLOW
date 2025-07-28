@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,15 +8,91 @@
     <link rel="icon" href="/imags/flame.png" type="image/x-icon">
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
-    
 
+    <!-- navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo"><a href="">TASKFLOW</a></div>
+            <ul class="nav-menu">
+                <li><a href="" class="nav-link">Home</a></li>
+                <li><a href="" class="nav-link">Learning</a></li>
+                <li><a href="" class="nav-link">About Me</a></li>
+            </ul>
+        </div>
+    </nav>
 
+    <!-- TaskFlow -->
+    <div class="container">
+        <div class="header">
+            <h1>📋TaskFlow</h1>
+            <p>จัดการงานอย่างมืออาชีพ</p>
+        </div>
 
+        <!-- stats -->
+        <div class="stats" id="stats">
+            <div class="stat-item">
+                <div class="stat-number" id="todoCount">0</div>
+                <div class="stat-label">ต้องทำ</div>
+            </div>
 
+            <div class="stat-item">
+                <div class="stat-number" id="todoCount">0</div>
+                <div class="stat-label">กำลังทำ</div>
+            </div>
+
+            <div class="stat-item">
+                <div class="stat-number" id="todoCount">0</div>
+                <div class="stat-label">เสร็จแล้ว</div>
+            </div>
+        </div>
+
+        <!-- task-input -->
+        <div class="task-input">
+            <div class="input-group">
+                <input type="text" id="taskTirle" class="input-field" placeholder="ชื่องาน..." />
+                <input type="text" id="taskDesc" class="input-field" placeholder="รายละเอียด..." />
+                <select id="taskPriority" class="priority-select">
+                    <option value="low">🟢 ต่ำ</option>
+                    <option value="medium">🟡 ปานกลาง</option>
+                    <option value="high">🔴 สูง</option>
+                </select>
+                <button class="add-btn" onclick="addTask()">+ เพิ่มงาน</button>
+            </div>
+        </div>
+
+        <!-- task-container -->
+        <div class="task-container">
+            <div class="task-column todo">
+                <div class="column-header">
+                    <div class="column-title">📋 ต้องทำ</div>
+                    <div class="task-count" id="todoCountLabel">0 งาน</div>
+                </div>
+                <div id="todoTasks"></div>
+            </div>
+
+            <div class="task-column todo">
+                <div class="column-header">
+                    <div class="column-title">⚡ กำลังทำ</div>
+                    <div class="task-count" id="todoCountLabel">0 งาน</div>
+                </div>
+                <div id="progressTasks"></div>
+            </div>
+
+            <div class="task-column todo">
+                <div class="column-header">
+                    <div class="column-title">✅ เสร็จแล้ว</div>
+                    <div class="task-count" id="todoCountLabel">0 งาน</div>
+                </div>
+                <div id="doneTasks"></div>
+            </div>
+        </div>
+    </div>
 
 
 
     <script src="js/script.js"></script>
 </body>
+
 </html>
