@@ -11,6 +11,19 @@
 
 <body>
 
+    <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TASKFLOW</title>
+    <link rel="icon" href="/imags/flame.png" type="image/x-icon">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
     <!-- navbar -->
     <nav class="navbar">
         <div class="nav-container">
@@ -22,36 +35,30 @@
             </ul>
         </div>
     </nav>
-
-    <!-- TaskFlow -->
     <div class="container">
         <div class="header">
-            <h1>📋TaskFlow</h1>
+            <h1>📋 TaskFlow</h1>
             <p>จัดการงานอย่างมืออาชีพ</p>
         </div>
 
-        <!-- stats -->
         <div class="stats" id="stats">
             <div class="stat-item">
                 <div class="stat-number" id="todoCount">0</div>
                 <div class="stat-label">ต้องทำ</div>
             </div>
-
             <div class="stat-item">
-                <div class="stat-number" id="todoCount">0</div>
+                <div class="stat-number" id="progressCount">0</div>
                 <div class="stat-label">กำลังทำ</div>
             </div>
-
             <div class="stat-item">
-                <div class="stat-number" id="todoCount">0</div>
+                <div class="stat-number" id="doneCount">0</div>
                 <div class="stat-label">เสร็จแล้ว</div>
             </div>
         </div>
 
-        <!-- task-input -->
         <div class="task-input">
             <div class="input-group">
-                <input type="text" id="taskTirle" class="input-field" placeholder="ชื่องาน..." />
+                <input type="text" id="taskTitle" class="input-field" placeholder="ชื่องาน..." />
                 <input type="text" id="taskDesc" class="input-field" placeholder="รายละเอียด..." />
                 <select id="taskPriority" class="priority-select">
                     <option value="low">🟢 ต่ำ</option>
@@ -62,33 +69,39 @@
             </div>
         </div>
 
-        <!-- task-container -->
-        <div class="task-container">
+        <div class="tasks-container">
             <div class="task-column todo">
                 <div class="column-header">
-                    <div class="column-title">📋 ต้องทำ</div>
+                    <div class="column-title">📝 ต้องทำ</div>
                     <div class="task-count" id="todoCountLabel">0 งาน</div>
                 </div>
                 <div id="todoTasks"></div>
             </div>
 
-            <div class="task-column todo">
+            <div class="task-column progress">
                 <div class="column-header">
                     <div class="column-title">⚡ กำลังทำ</div>
-                    <div class="task-count" id="todoCountLabel">0 งาน</div>
+                    <div class="task-count" id="progressCountLabel">0 งาน</div>
                 </div>
                 <div id="progressTasks"></div>
             </div>
 
-            <div class="task-column todo">
+            <div class="task-column done">
                 <div class="column-header">
                     <div class="column-title">✅ เสร็จแล้ว</div>
-                    <div class="task-count" id="todoCountLabel">0 งาน</div>
+                    <div class="task-count" id="doneCountLabel">0 งาน</div>
                 </div>
                 <div id="doneTasks"></div>
             </div>
         </div>
     </div>
+
+
+
+    <script src="js/script.js"></script>
+</body>
+
+</html>
 
 
 
